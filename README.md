@@ -37,13 +37,16 @@ We recommend reading the build arguments and applying them based on your require
 build step of the docker file using the `--build-arg W=X Y=Z` flag.
 
 #### FEED_PROVISION
-- Available values: `init`, `build`
+> Available values: `init`, `build`. Default: `init`
+
 Defines when the scanner feed update takes place, either during the `build` step or on `init`ialisaton of the container.
 For the most up to date scanner feed, it is recommended to use `init` (default), although if you want rapid container
 initialisation (e.g cloud deployments), it is recommended to use `build`. The step itself takes up to or over 15 minutes
 and therefore can be useful to perform on a high end machine.
 
 #### GVM_ADMIN_PASSWORD
+> Default: `password`
+
 The GVM admin password is the password attributed to the default admin user created during the build process of the GVM
 image. The default is `password` and it is highly recommended this is changed to be more secure, especially if you are
 hosting the container with a public facing URL.
@@ -123,9 +126,9 @@ aws ecs register-task-definition --cli-input-json "$TASK_DEFINITION"
 # run the task against the cluster created above
 aws ecs run-task \
   --cluster "openvas-cluster" \
-  --task-definition "openvas:<VERSION_NUMBER>"
-  --launch-type FARGATE
-  --count 1
+  --task-definition "openvas:<VERSION_NUMBER>" \
+  --launch-type FARGATE \
+  --count 1 \
   --network-configuration "awsvpcConfiguration={subnets=[<SUBNET_ID>],securityGroups=[<SECURITY_GROUP_ID>],assignPublicIp=ENABLED}"
 ```
 
