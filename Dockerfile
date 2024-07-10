@@ -277,7 +277,8 @@ RUN ldconfig
 RUN apt-get install -y postgresql-15
 
 USER postgres
-RUN service postgresql start ;\
+RUN mkdir /run/postgresql && chown postgres:postgres /run/postgresql ;\
+    service postgresql start ;\
     createuser -DR root ;\
     createdb -O root gvmd ;\
     psql gvmd -c "create role dba with superuser noinherit; grant dba to root;" ;\
@@ -292,7 +293,9 @@ USER root
 RUN ldconfig
 
 # set correct permissions for gvm and create run directories to prevent claims of non-existance
-RUN mkdir -p /var/lib/notus ;\
+RUN mkdir -p /var/lib/gvm ;\
+    mkdir -p /var/lib/openvas ;\
+    mkdir -p /var/lib/notus ;\
     mkdir -p /run/gvmd ;\
     mkdir -p /run/redis-openvas ;\
     mkdir -p /run/ospd ;\
@@ -304,6 +307,7 @@ RUN mkdir -p /var/lib/notus ;\
     chown -R gvm:gvm /run/gvmd ;\
     chmod -R g+srw /var/lib/gvm ;\
     chmod -R g+srw /var/lib/openvas ;\
+    chmod -R g+srw /var/lib/notus ;\
     chmod -R g+srw /var/log/gvm ;\
     chmod -R g+srw /var/log/gvm
 
